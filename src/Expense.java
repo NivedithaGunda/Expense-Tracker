@@ -30,6 +30,10 @@ public class Expense {
         return amount;
     }
 
+    public String getNote(){
+        return note;
+    }
+
     public String toString() {
         return amount + " | " + category + " | " + note;
     }

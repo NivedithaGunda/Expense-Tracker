@@ -1,10 +1,12 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        ExpenseTracker tracker = new ExpenseTracker();
-
+        ExpenseRepository repo = new ExpenseRepository();
+        ExpenseService service = new ExpenseService(repo);
+        
         while (true) {
             System.out.println("""
                     ------ Expense Tracker ------
@@ -39,16 +41,24 @@ public class App {
                     System.out.println("Enter note: ");
                     String note = sc.nextLine();
 
-                    tracker.addExpense(new Expense(amount, category, note));
+                    service.addExpense(amount, category, note);
     
                     break;
                 
                 case 2:
-                    tracker.viewExpense();
+                    List<Expense> expenses = service.viewExpense();
+                    if (expenses.isEmpty()) {
+                        System.out.println("No expenses added");
+                    } else {
+                        System.out.println("--- All Expenses ---");
+                        for (int i = 0; i < expenses.size(); i++) {
+                            System.out.println((i + 1) + ") " + expenses.get(i));
+                        }
+                    }
                     break;
                 
                 case 3:
-                    System.out.println("Total spent= " + tracker.getTotal());
+                    System.out.println("Total spent= " + service.getTotal());
                     break;
                 
                 case 4:
@@ -63,20 +73,29 @@ public class App {
                         expenseByCategory = Category.OTHER;
                     }
 
-                    tracker.viewExpenseByCategory(expenseByCategory);
+                    System.out.println("--- " + expenseByCategory + " Expenses ---");
+                    List<Expense> filtered = service.viewExpenseByCategory(expenseByCategory);
+
+                    if (filtered.isEmpty()) {
+                        System.out.println("No expenses found for " + expenseByCategory);
+                    } else {
+                        for (Expense e : filtered) {
+                            System.out.println(e.getAmount() + " | " + e.getNote());
+                        }
+                    }
                     break;
                 
-                case 5:
+                // case 5:
             
-                    System.out.println("Expense to delete: ");
-                    int idx = sc.nextInt();
-                    tracker.deleteExpenses(idx);
-                    break;
+                //     System.out.println("Expense to delete: ");
+                //     int idx = sc.nextInt();
+                //     service.deleteExpenses(idx);
+                //     break;
                 
                 default:
                     return;
             }
-        sc.close();
+        // sc.close();
         }
     }
 }
