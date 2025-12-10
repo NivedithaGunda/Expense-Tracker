@@ -19,4 +19,8 @@ public class ExpenseRepository{
                         .toList();
     }
 
+    public void delete(int index) {
+        expenses.remove(index);
+    }
+
 }

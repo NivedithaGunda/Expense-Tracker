@@ -27,6 +27,9 @@ public class App {
                     System.out.println("Enter amount: ");
                     double amount = sc.nextDouble();
                     sc.nextLine();
+                    if (amount <= 0) {
+                        throw new IllegalArgumentException("Amount must be > 0");
+                    }
 
                     System.out.println("Enter Category (Food/Travel/Shopping/Entertainment, Rent, Other): ");
                     String catinput = sc.nextLine();
@@ -42,7 +45,8 @@ public class App {
                     String note = sc.nextLine();
 
                     service.addExpense(amount, category, note);
-    
+                    System.out.println("Expense added successfully!");
+
                     break;
                 
                 case 2:
@@ -85,12 +89,17 @@ public class App {
                     }
                     break;
                 
-                // case 5:
+                case 5:
             
-                //     System.out.println("Expense to delete: ");
-                //     int idx = sc.nextInt();
-                //     service.deleteExpenses(idx);
-                //     break;
+                    System.out.println("Expense to delete: ");
+                    int idx = sc.nextInt();
+                    boolean deleted = service.deleteExpenses(idx);
+                    if(deleted) {
+                        System.out.println("Expense deleted");
+                    } else {
+                        System.out.println("Invalid index");
+                    }
+                    break;
                 
                 default:
                     return;
