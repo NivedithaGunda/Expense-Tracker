@@ -59,5 +59,5 @@ Enter category: Food
 --- Food Expenses ---
 250 | Lunch with friend
 
-Exit
-Thank you for using the Expense Tracker!
+## Refactor: Introduced Service and Repository layers
+Separated Repository and Service to make a CRUD design. 
