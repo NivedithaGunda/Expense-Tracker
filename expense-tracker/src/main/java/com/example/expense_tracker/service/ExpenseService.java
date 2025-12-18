@@ -3,7 +3,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.expense_tracker.Expenseinterface.ExpenseRepositoryInterface;
+import com.example.expense_tracker.dto.ExpenseTrackerDTO;
+import com.example.expense_tracker.expenseinterface.ExpenseRepositoryInterface;
 import com.example.expense_tracker.model.Category;
 import com.example.expense_tracker.model.Expense;
 import com.example.expense_tracker.repository.ExpenseRepository;
@@ -18,9 +19,16 @@ public class ExpenseService {
         this.expenseRepository = repo;
     }
 
-    public void addExpense(double amount, Category category, String note) {
+    public void addExpense(ExpenseTrackerDTO dto) {
         
-        Expense expense = new Expense(amount, category, note);
+        Category category;
+
+        try {
+            category = Category.valueOf(dto.getCategory().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid category : " + dto.getCategory());
+        }
+        Expense expense = new Expense(dto.getAmount(), category, dto.getNote());
         expenseRepository.save(expense);
     }
 

@@ -1,4 +1,4 @@
-package com.example.expense_tracker.Expenseinterface;
+package com.example.expense_tracker.expenseinterface;
 
 import java.util.List;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.example.expense_tracker.Expenseinterface.ExpenseRepositoryInterface;
+import com.example.expense_tracker.expenseinterface.ExpenseRepositoryInterface;
 import com.example.expense_tracker.model.Category;
 import com.example.expense_tracker.model.Expense;
 import com.fasterxml.jackson.databind.ObjectMapper;

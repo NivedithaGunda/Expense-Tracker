@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.expense_tracker.dto.ExpenseTrackerDTO;
 import com.example.expense_tracker.model.Category;
 import com.example.expense_tracker.model.Expense;
 import com.example.expense_tracker.service.ExpenseService;
@@ -30,9 +31,9 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<Expense> addExpense(@Valid @RequestBody Expense expense) {
-        service.addExpense(expense.getAmount(), expense.getCategory(), expense.getNote());
-        return ResponseEntity.status(HttpStatus.CREATED).body(expense);
+    public String addExpense(@Valid @RequestBody ExpenseTrackerDTO dto) {
+        service.addExpense(dto);
+        return "Expense added";
     }
 
     @GetMapping
