@@ -2,6 +2,8 @@ package com.example.expense_tracker.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.expense_tracker.model.Category;
 import com.example.expense_tracker.model.Expense;
 import com.example.expense_tracker.service.ExpenseService;
+
+import jakarta.validation.Valid;
 
 
 
@@ -26,9 +30,9 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public String addExpense(@RequestBody Expense expense) {
+    public ResponseEntity<Expense> addExpense(@Valid @RequestBody Expense expense) {
         service.addExpense(expense.getAmount(), expense.getCategory(), expense.getNote());
-        return "Expense added";
+        return ResponseEntity.status(HttpStatus.CREATED).body(expense);
     }
 
     @GetMapping

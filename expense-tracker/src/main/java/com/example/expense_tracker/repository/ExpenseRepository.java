@@ -14,15 +14,23 @@ import com.example.expense_tracker.model.Category;
 import com.example.expense_tracker.model.Expense;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.annotation.PostConstruct;
+
 @Repository
 public class ExpenseRepository implements ExpenseRepositoryInterface {
 
     private static final String FILE_NAME = "expenses.json";
-    @Autowired
+
     private ObjectMapper mapper;
+
     private List<Expense> expenses = new ArrayList<>();
 
-    public ExpenseRepository() {
+    public ExpenseRepository(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    @PostConstruct
+    public void init() {
         loadFromFile();
     }
 
