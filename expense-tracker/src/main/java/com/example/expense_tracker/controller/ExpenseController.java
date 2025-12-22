@@ -1,6 +1,7 @@
 package com.example.expense_tracker.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.expense_tracker.dto.ExpenseTrackerDTO;
@@ -31,14 +33,17 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public String addExpense(@Valid @RequestBody ExpenseTrackerDTO dto) {
+    public ResponseEntity<?> addExpense(@Valid @RequestBody ExpenseTrackerDTO dto) {
         service.addExpense(dto);
-        return "Expense added";
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","Expense added"));
     }
 
     @GetMapping
-    public List<Expense> getAll() {
-        return service.viewExpense();
+    public List<Expense> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String sort) {
+        return service.viewExpense(page, size, sort);
     }
 
     @GetMapping("/total")

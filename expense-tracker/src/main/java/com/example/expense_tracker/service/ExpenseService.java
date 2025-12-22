@@ -32,11 +32,33 @@ public class ExpenseService {
         expenseRepository.save(expense);
     }
 
-    public List<Expense> viewExpense() {
+    // sorting and pagination 
+    public List<Expense> viewExpense(int page, int size, String sortBy) {
         
-        return expenseRepository.findAll();
+        List<Expense> expenses = expenseRepository.findAll();
 
+         if ("dataDesc".equalsIgnoreCase(sortBy)) {
+            expenses =  expenses.stream()
+                        .sorted((a,b) -> b.getCreateddt().compareTo(a.getCreateddt()))
+                        .toList();
+        }
+
+        if ("dataAsc".equalsIgnoreCase(sortBy)) {
+            expenses =  expenses.stream()
+                    .sorted((a,b) -> a.getCreateddt().compareTo(b.getCreateddt()))
+                    .toList();
+        }
+
+        int start = page * size;
+        int end = Math.min(start + size, expenses.size());
+
+        if (start >= expenses.size()) {
+            return List.of();
+        }
+
+        return expenses.subList(start, end);
     }
+
 
     public double getTotal() {
         return expenseRepository.findAll().stream()

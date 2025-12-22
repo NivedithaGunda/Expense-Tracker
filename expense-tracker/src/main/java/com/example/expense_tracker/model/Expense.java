@@ -1,5 +1,6 @@
 package com.example.expense_tracker.model;
 
+import java.time.LocalDateTime;
 
 public class Expense {
 
@@ -9,8 +10,10 @@ public class Expense {
 
      String note;
 
-    public Expense(){
+     LocalDateTime createdAt;
 
+    public Expense(){
+        this.createdAt = LocalDateTime.now();
     }
 
     public Expense(double amount){
@@ -25,6 +28,7 @@ public class Expense {
         this.amount = amount;
         this.category = category;
         this.note = note;
+        this.createdAt = LocalDateTime.now();
     }
 
     public Category getCategory(){
@@ -37,6 +41,10 @@ public class Expense {
 
     public String getNote(){
         return note;
+    }
+
+    public LocalDateTime getCreateddt() {
+        return createdAt;
     }
 
     public String toString() {
