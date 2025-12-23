@@ -9,55 +9,64 @@ View total spent
 View expenses by category
 Exit the app
 
-This project helps beginners practice:
-OOP concepts
-ArrayList / Lists
-Loops & conditionals
-Basic input using Scanner
-Clean code & modular design
-
-## Steps to Set Up the Project Locally
-Prerequisites -  Java installed (JDK 8+), Any IDE (IntelliJ / VS Code) OR just a terminal
-
-Setup-
-Expense.java
-ExpenseTracker.java
-Main.java
-
-## How to Run / Use the Project
-Run the Main class.
-
-The console will display a menu like:
-
------- Expense Tracker ------
-1. Add Expense
-2. View All Expenses
-3. View Total Expenses
-4. View Expenses by Category
-5. Delete an Expense
-6. Exit
-Enter your choice:
-
-## Example Usage
-
-Add Expense
-Enter amount: 250
-Enter category (Food/Travel/Shopping/Entertainment, Rent, Other): Food
-Enter note: Lunch with friend
-Expense added successfully!
-
-View All Expenses
---- All Expenses ---
-1) 250 | Food | Lunch with friend
-2) 100 | Travel | Auto fare
-
-View Total Expenses
-Total spent: ₹350
-
-View Expenses by Category
-Enter category: Food
---- Food Expenses ---
-250 | Lunch with friend
 
 ## Refactor: Introduced Service and Repository layers
 Separated Repository and Service to make a CRUD design. 
+
+## Concepts used in each class
+Enum – Category
+Used to restrict category values to a fixed set like FOOD, TRAVEL, RENT, etc.
+Prevents invalid category values from being used in the application.
+
+Class – Expense
+Encapsulation used by making fields private (amount, category, note, createdAt).
+Access to fields is only through getters, not direct access.
+Represents a single expense entity used across repository, service, and controller.
+
+Interface – ExpenseRepositoryInterface
+Defines a contract (save, findAll, delete, etc.).
+Allows switching implementations without changing service code.
+
+Class – ExpenseJSONRepository
+Implements ExpenseRepositoryInterface.
+Contains file-related logic (JSON read/write using ObjectMapper).
+Abstraction used: Service does not know how data is stored (file/db/in-memory)
+ObjectMapper (Jackson) Converts:
+JSON → Java (readValue)
+Java → JSON (writeValue)
+Abstracts low-level JSON parsing logic
+
+Class – ExpenseService
+Contains business logic (total calculation, delete validation, filtering).
+Dependency Injection used via constructor - public ExpenseService(ExpenseRepositoryInterface repo)
+Service does not create repository, it only uses it.
+
+Class – ExpenseController
+Acts as API layer using @RestController.
+Uses annotations like @PostMapping, @GetMapping, @DeleteMapping.
+Converts HTTP requests → service calls.
+Uses DTO instead of entity to accept input safely
+
+DTO – ExpenseRequestDTO
+Used to separate API input from domain model.
+Validation annotations applied here (@Positive, @NotNull, etc.).
+Prevents invalid data from reaching Expense model.  
+
+Mapper Logic (DTO → Entity)
+Conversion from DTO to Expense happens in Controller or Service.
+This is where data transformation responsibility is handled.
+
+Class – GlobalExceptionHandler
+Uses @RestControllerAdvice.
+Centralized exception handling for: Validation errors, Illegal arguments
+Converts exceptions into clean HTTP responses instead of stack traces
+
+Class – ExpenseTrackerApplication
+Contains the main() method.
+Used to bootstrap and start the Spring Boot application.
+
+## Move from file -> Databse using JPA + SQL
+Remove below
+JSON file handling
+ObjectMapper - file read/write logic
+Manual List<Expense> storage

@@ -1,21 +1,22 @@
 package com.example.expense_tracker.service;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.expense_tracker.dto.ExpenseTrackerDTO;
-import com.example.expense_tracker.expenseinterface.ExpenseRepositoryInterface;
+import com.example.expense_tracker.expenseinterface.ExpenseRepositoryJPA;
 import com.example.expense_tracker.model.Category;
 import com.example.expense_tracker.model.Expense;
-import com.example.expense_tracker.repository.ExpenseRepository;
 
 
 @Service
 public class ExpenseService {
 
-    private ExpenseRepositoryInterface expenseRepository;
+    private final ExpenseRepositoryJPA expenseRepository;
 
-    public ExpenseService(ExpenseRepository repo) {
+    public ExpenseService(ExpenseRepositoryJPA repo) {
         this.expenseRepository = repo;
     }
 
@@ -35,28 +36,16 @@ public class ExpenseService {
     // sorting and pagination 
     public List<Expense> viewExpense(int page, int size, String sortBy) {
         
-        List<Expense> expenses = expenseRepository.findAll();
+        Sort sort = Sort.by(
+            "dataDesc".equals(sortBy)
+            ? Sort.Direction.DESC
+            : Sort.Direction.ASC,
 
-         if ("dataDesc".equalsIgnoreCase(sortBy)) {
-            expenses =  expenses.stream()
-                        .sorted((a,b) -> b.getCreateddt().compareTo(a.getCreateddt()))
-                        .toList();
-        }
+            "createdAt"
+        );
 
-        if ("dataAsc".equalsIgnoreCase(sortBy)) {
-            expenses =  expenses.stream()
-                    .sorted((a,b) -> a.getCreateddt().compareTo(b.getCreateddt()))
-                    .toList();
-        }
-
-        int start = page * size;
-        int end = Math.min(start + size, expenses.size());
-
-        if (start >= expenses.size()) {
-            return List.of();
-        }
-
-        return expenses.subList(start, end);
+        PageRequest pageable = PageRequest.of(page, size, sort);
+        return expenseRepository.findAll(pageable).getContent();
     }
 
 
@@ -71,17 +60,8 @@ public class ExpenseService {
         
     }
 
-    public boolean deleteExpenses(int userIndex) {
-        List<Expense> expenses = expenseRepository.findAll();
-
-        int index = userIndex - 1;
-
-        if (index < 0 || index >= expenses.size()) {
-            return false;
-        }
-        
-        expenseRepository.delete(index);
-        return true;
+    public void deleteExpenses(Long id) {
+        expenseRepository.deleteById(id);
     }
     
 }

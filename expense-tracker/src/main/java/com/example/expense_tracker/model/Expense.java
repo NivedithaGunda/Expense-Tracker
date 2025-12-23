@@ -2,15 +2,36 @@ package com.example.expense_tracker.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="expenses")
 public class Expense {
 
-     double amount;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-     Category category;
+    private double amount;
 
-     String note;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
-     LocalDateTime createdAt;
+    private String note;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public Expense(){
         this.createdAt = LocalDateTime.now();
@@ -31,6 +52,10 @@ public class Expense {
         this.createdAt = LocalDateTime.now();
     }
 
+    public long getId() {
+        return id;
+    }
+    
     public Category getCategory(){
         return category;
     }
